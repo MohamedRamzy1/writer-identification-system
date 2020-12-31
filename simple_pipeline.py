@@ -65,7 +65,7 @@ xtrain, xvalid, ytrain, yvalid = train_test_split(img_features, img_labels, stra
                                                 test_size=0.1, shuffle=True)
 
 # SVM classifier
-clf = SVC()
+clf = SVC(C=5.0, gamma='auto', probability=True)
 clf.fit(xtrain, ytrain)
 predictions = clf.predict(xvalid)
 
