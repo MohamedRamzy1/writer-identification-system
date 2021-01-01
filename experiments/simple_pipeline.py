@@ -34,7 +34,7 @@ def get_lbp_features(img_path):
 
 # read forms data
 writers_forms = dict()
-with open('data/ascii/forms.txt') as f:
+with open('../data/ascii/forms.txt') as f:
     for i in range(16):
         next(f)
     for line in f:
@@ -49,7 +49,7 @@ img_paths = list()
 img_labels = list()
 for id, writer in enumerate(writers_forms.keys()):
     for form in writers_forms[writer]:
-        form_path = os.path.join(os.path.join('data/lines', form[:3]), form)
+        form_path = os.path.join(os.path.join('../data/lines', form[:3]), form)
         form_lines = os.listdir(form_path)
         for line in form_lines:
             img_paths.append(os.path.join(form_path, line))

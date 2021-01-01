@@ -7,12 +7,12 @@
 
 ## Dataset Exploration
 -   The used dataset is [IAM Handwriting Database](https://fki.tic.heia-fr.ch/databases/iam-handwriting-database).
--   Refer to `dataset-exploration.ipynb` for dataset exploration.
+-   Refer to `experiments/dataset-exploration.ipynb` for dataset exploration.
 
 ## Pre-Processing Stage
 -   Remove document noise.
 -   Extract written part only.
--   Segment out lines _[OPTIONAL]_.
+-   Segment out lines.
 
 ## Feature Extraction
 -   Texture Descriptors (LBP mostly).
