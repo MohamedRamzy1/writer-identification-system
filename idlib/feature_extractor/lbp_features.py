@@ -46,7 +46,7 @@ class LBPFeatureExtractor:
         lbp_map[bin_img == 255] = -1
         unique, counts = np.unique(lbp_map, return_counts=True)
         lbp_counts = dict(zip(unique, counts))
-        lbp_hist = [lbp_counts[float(i)] for i in range(256) if float(i) in lbp_counts.keys()]
+        lbp_hist = [lbp_counts[float(i)] if float(i) in lbp_counts.keys() else 0 for i in range(256)]
         lbp_hist = np.array(lbp_hist)
         lbp_hist = np.divide(lbp_hist, np.mean(lbp_hist))
         return lbp_hist
