@@ -18,28 +18,28 @@ class LBPFeatureExtractor:
         padded_img = self._pad_image(img)
         # top
         cmp_map = (padded_img[:img_height, self.radius:img_width+self.radius] >= img)
-        lbp_map[:img_height-self.radius, :] += cmp_map[self.radius:, :] * 1
+        lbp_map[self.radius:, :] += cmp_map[self.radius:, :] * 1
         # top-right
         cmp_map = (padded_img[:img_height, 2*self.radius:] >= img)
-        lbp_map[:img_height-self.radius, self.radius:] += cmp_map[self.radius:, :img_width-self.radius] * 2
+        lbp_map[self.radius:, :img_width-self.radius] += cmp_map[self.radius:, :img_width-self.radius] * 2
         # right
         cmp_map = (padded_img[self.radius:img_height+self.radius, 2*self.radius:] >= img)
-        lbp_map[:, self.radius:] += cmp_map[:, :img_width-self.radius] * 4
+        lbp_map[:, :img_width-self.radius] += cmp_map[:, :img_width-self.radius] * 4
         # bottom-right
         cmp_map = (padded_img[2*self.radius:, 2*self.radius:] >= img)
-        lbp_map[self.radius:, self.radius:] += cmp_map[:img_height-self.radius, :img_width-self.radius] * 8
+        lbp_map[:img_height-self.radius, :img_width-self.radius] += cmp_map[:img_height-self.radius, :img_width-self.radius] * 8
         # bottom
         cmp_map = (padded_img[2*self.radius:, self.radius:img_width+self.radius] >= img)
-        lbp_map[self.radius:, :] += cmp_map[:img_height-self.radius, :] * 16
+        lbp_map[:img_height-self.radius, :] += cmp_map[:img_height-self.radius, :] * 16
         # bottom-left
         cmp_map = (padded_img[2*self.radius:, :img_width] >= img)
-        lbp_map[self.radius:, :img_width-self.radius] += cmp_map[:img_height-self.radius, self.radius:] * 32
+        lbp_map[:img_height-self.radius, self.radius:] += cmp_map[:img_height-self.radius, self.radius:] * 32
         # left
         cmp_map = (padded_img[self.radius:img_height+self.radius, :img_width] >= img)
-        lbp_map[:, :img_width-self.radius] += cmp_map[:, self.radius:] * 64
+        lbp_map[:, self.radius:] += cmp_map[:, self.radius:] * 64
         # top-left
         cmp_map = (padded_img[:img_height, :img_width] >= img)
-        lbp_map[:img_height-self.radius, :img_width-self.radius] += cmp_map[self.radius:, self.radius:] * 128
+        lbp_map[self.radius:, self.radius:] += cmp_map[self.radius:, self.radius:] * 128
         return lbp_map
 
     def _calc_histogram(self, lbp_map, bin_img):
@@ -47,7 +47,9 @@ class LBPFeatureExtractor:
         unique, counts = np.unique(lbp_map, return_counts=True)
         lbp_counts = dict(zip(unique, counts))
         lbp_hist = [lbp_counts[float(i)] for i in range(256) if float(i) in lbp_counts.keys()]
-        return np.array(lbp_hist)
+        lbp_hist = np.array(lbp_hist)
+        lbp_hist = np.divide(lbp_hist, np.mean(lbp_hist))
+        return lbp_hist
 
     def fit(self, lines):
         lbp_features = list()
