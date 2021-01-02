@@ -13,12 +13,16 @@
 -   Remove document noise.
 -   Extract written part only.
 -   Segment out lines.
+-   Extract connected components _[OPTIONAL]_.
 
 ## Feature Extraction
--   Texture Descriptors (LBP mostly).
--   Codebooks _[OPTIONAL]_.
+-   LBP Texture Descriptors.
+-   GLCM Texture Descriptors.
+-   CSLBCoP Texture Descriptors.
+-   LPQ Texture Descriptors.
 
 ## Classifiers
 -   SVM.
--   MLP.
 -   K-NN.
+-   MLP.
+-   RF.
