@@ -17,9 +17,9 @@
 
 ## Feature Extraction
 -   LBP Texture Descriptors.
--   GLCM Texture Descriptors.
--   CSLBCoP Texture Descriptors.
+-   GLCM (CSLBCoP) Texture Descriptors.
 -   LPQ Texture Descriptors.
+-   PCA (or Truncated SVD) on extracted features.
 
 ## Classifiers
 -   SVM.
