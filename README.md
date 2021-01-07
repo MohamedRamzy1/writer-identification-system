@@ -26,3 +26,8 @@
 -   K-NN.
 -   MLP.
 -   RF.
+-   XGB.
+-   LR.
+-   NB.
+
+__NOTE :__ Use _Grid Search_ for hyperparamter tuning.
