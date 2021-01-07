@@ -1,23 +1,19 @@
 import torch
-import os
 import numpy as np
 
 class LineSegmentor:
     """
     Segment out lines from form image and extract them.
     """
-    def __init__(self):
-        # initialize parameters
-        pass
-
-    def pad_with(self, vector, pad_width, iaxis, kwargs):
-        # pad with zeros
-        pad_value = kwargs.get('padder', 0)
-        vector[:pad_width[0]] = pad_value
-        vector[-pad_width[1]:] = pad_value
-
-    def split_in_lines(self, img, min_line_height=10):
+    @staticmethod
+    def split_in_lines(img, min_line_height=10):
         # split a form image into lines
+        # TODO : improve line segmentation
+        def pad_with(vector, pad_width, iaxis, kwargs):
+            # pad with zeros
+            pad_value = kwargs.get('padder', 0)
+            vector[:pad_width[0]] = pad_value
+            vector[-pad_width[1]:] = pad_value
         # binarize image
         img = 1 - ((img > 128) * 1)
         # convert to torch tensor
@@ -47,7 +43,7 @@ class LineSegmentor:
         for i in range(line_count):
             line = img[rising_indices[i]:falling_indices[i]]
             line_height = line.shape[0]
-            line = np.pad(line, line.shape[0]//3, self.pad_with)
+            line = np.pad(line, line.shape[0]//3, pad_with)
             # filter if less than 10 pixels
             if line_height > min_line_height:
                 lines.append(1-line)
