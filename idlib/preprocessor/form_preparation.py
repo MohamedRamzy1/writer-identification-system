@@ -1,5 +1,5 @@
 import numpy as np
-from line_segmentation import LineSegmentor
+from .line_segmentation import LineSegmentor
 
 class FormPreparator:
     @staticmethod

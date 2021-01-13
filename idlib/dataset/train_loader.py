@@ -102,20 +102,18 @@ class TrainLoader:
         yvalid = label_encoder.transform(yvalid)
         return xtrain, xvalid, ytrain, yvalid
 
-    def get_complete_data(self, specific_writers=None, test_split=0.2):
-        # get complete dataset of some or all writers
-        # if no specific writers are provided return all writers
-        if not specific_writers:
-            specific_writers = self.writers_forms_dict.keys()
+    def get_complete_data(self, forms_per_writer=5, test_split=0.2):
+        # get complete dataset of writers with specific number of forms
         # list all forms for the specified writers
         X = list()
         Y = list()
-        for writer in specific_writers:
-            X.extend(self.writers_forms_dict[writer])
-            Y.extend([writer]*len(self.writers_forms_dict[writer]))
+        for writer in self.writers_forms_dict.keys():
+            if len(self.writers_forms_dict[writer]) == forms_per_writer:
+                X.extend(self.writers_forms_dict[writer])
+                Y.extend([writer]*forms_per_writer)
         # encode labels
         label_encoder = LabelEncoder()
-        label_encoder.fit(specific_writers)
+        label_encoder.fit(Y)
         Y = label_encoder.transform(Y)
         # train / validation split with stratify
         xtrain, xvalid, ytrain, yvalid = train_test_split(X, Y, stratify=Y, random_state=42,
