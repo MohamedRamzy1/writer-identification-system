@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import random
+import cv2
 
 class TestLoader:
     """
@@ -34,13 +35,18 @@ class TestLoader:
         # get test case directory
         case_dir = os.path.join(self.data_dir, test_case_name)
         # list data provided within test case
-        xtrain = list()
+        xtrain_dir = list()
         ytrain = list()
-        xtest = os.path.join(case_dir, 'test.png')
+        xtest_dir = os.path.join(case_dir, 'test.png')
         for writer in range(self.num_writers_per_test):
             writer_dir = os.path.join(case_dir, str(writer+1))
             writer_samples = [os.path.join(writer_dir, f'{str(sample+1)}.png') for sample in range(self.num_samples_per_writer)]
-            xtrain.extend(writer_samples)
+            xtrain_dir.extend(writer_samples)
             ytrain.extend([writer]*self.num_samples_per_writer)
+        # read form sample images
+        xtrain = list()
+        xtest = cv2.imread(xtest_dir, cv2.IMREAD_GRAYSCALE)
+        for sample in xtrain_dir:
+            xtrain.append(cv2.imread(sample, cv2.IMREAD_GRAYSCALE))
         # return train lists and test sample
         return xtrain, ytrain, xtest
