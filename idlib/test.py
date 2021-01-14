@@ -9,7 +9,7 @@ import time
 
 def test(data_dir='data/test_samples/'):
     # intialize test dataloader
-    dataloader = TestLoader(data_dir)
+    dataloader = TestLoader(data_dir=data_dir)
     test_cases = dataloader.list_test_cases()
     # initialize LBP feature extractor
     lbp_extractor = LBPFeatureExtractor(radius=3)

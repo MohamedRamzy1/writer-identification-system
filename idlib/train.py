@@ -74,4 +74,42 @@ def complete_train(data_dir='data/'):
     print (f'svm accuracy: {accuracy_score(yvalid_labels, predictions)*100}%')
 
 def sampled_train(data_dir='data/'):
-    pass
+    # perform training and grid search on sampled data
+    # intialize train dataloader
+    dataloader = TrainLoader(data_dir=data_dir)
+    dataloader.build_dataset()
+    # initialize LBP feature extractor
+    lbp_extractor = LBPFeatureExtractor(radius=3)
+    # initialize form preparator
+    form_processor = FormPreparator(denoise=True)
+    # initialize classifier
+    clf = SVC(C=5.0, gamma='auto', probability=True, verbose=True)
+    # loop over all test cases
+    total_cases = 0
+    correct_cases = 0
+    for test_case in range(100):
+        # read test case images
+        xtrain, xvalid, ytrain, yvalid = dataloader.get_data_samples()
+        # extract train samples features
+        xtrain_features = list()
+        ytrain_labels = list()
+        for img_name, label in zip(xtrain, ytrain):
+            img = cv2.imread(img_name, cv2.IMREAD_GRAYSCALE)
+            lines, bin_lines = form_processor.prepare_form(img)
+            features = lbp_extractor.fit(lines, bin_lines)
+            xtrain_features.extend(features)
+            ytrain_labels.extend([label]*len(features))
+        # extract test sample features
+        img = cv2.imread(xvalid, cv2.IMREAD_GRAYSCALE)
+        lines, bin_lines = form_processor.prepare_form(img)
+        test_features = lbp_extractor.fit(lines, bin_lines)
+        # train classifier on train samples features
+        clf.fit(xtrain_features, ytrain_labels)
+        # get predictions
+        lines_prob = clf.predict_proba(test_features)
+        lines_prob = np.sum(lines_prob, axis=0)
+        prediction = np.argmax(lines_prob)
+        total_cases += 1
+        if yvalid == prediction:
+            correct_cases += 1
+    print (f'svm accuracy: {float(correct_cases/total_cases)*100}%')

@@ -79,16 +79,16 @@ class TrainLoader:
         # list train and validation data samples
         xtrain = list()
         ytrain = list()
-        xvalid = list()
-        yvalid =  list()
+        xvalid = None
+        yvalid =  None
         for writer in train_writers:
             # check whether the writer is selected as a test to select one more form
             if writer == test_writer:
                 # select random forms from writer
                 rand_choices = random.choices(self.writers_forms_dict[writer], k=num_train_samples+1)
                 # get a single test form
-                xvalid.append(random.choice(rand_choices))
-                yvalid.append(writer)
+                xvalid = random.choice(rand_choices)
+                yvalid = writer
                 rand_choices.remove(xvalid)
                 # append to xtrain and ytrain
                 xtrain.extend(rand_choices)
@@ -99,7 +99,7 @@ class TrainLoader:
                 ytrain.extend([writer]*num_train_samples)
         # encode labels
         ytrain = label_encoder.transform(ytrain)
-        yvalid = label_encoder.transform(yvalid)
+        yvalid = label_encoder.transform([yvalid])[0]
         return xtrain, xvalid, ytrain, yvalid
 
     def get_complete_data(self, forms_per_writer=5, test_split=0.2):
