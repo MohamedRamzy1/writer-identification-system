@@ -42,7 +42,7 @@ def test(data_dir='data/test_samples/'):
         # get predictions
         lines_prob = clf.predict_proba(test_features)
         lines_prob = np.sum(lines_prob, axis=0)
-        prediction = clf.classes_[np.argmax(lines_prob)]
+        prediction = np.argmax(lines_prob)
         # calculate elapsed time
         total_time = time.time() - start_time
         # write outputs

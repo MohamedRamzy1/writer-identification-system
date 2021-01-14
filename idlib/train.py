@@ -20,16 +20,22 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import accuracy_score
 
 def complete_train(data_dir='data/'):
+    # perform training and grid search on complete data
     # initialize and build dataloader
+    print('Initializing dataloader ... \n')
     dataloader = TrainLoader(data_dir=data_dir)
     dataloader.build_dataset()
     # initialize LBP feature extractor
+    print('Initializing LBP feature extractor ... \n')
     lbp_extractor = LBPFeatureExtractor()
     # initialize form preparator
+    print('Initializing form preparator ... \n')
     form_processor = FormPreparator(denoise=True)
     # get complete train/validation dataset
+    print('Reading dataset ... \n')
     xtrain, xvalid, ytrain, yvalid = dataloader.get_complete_data(forms_per_writer=5, test_split=0.2)
     # read and prepare features for train images
+    print('Preparing train features ... \n')
     xtrain_features = list()
     ytrain_labels = list()
     for img_name, label in zip(xtrain, ytrain):
@@ -39,6 +45,7 @@ def complete_train(data_dir='data/'):
         xtrain_features.extend(features)
         ytrain_labels.extend([label]*len(features))
     # read and prepare features for validation images
+    print('Preparing test features ... \n')
     xvalid_features = list()
     yvalid_labels = list()
     for img_name, label in zip(xvalid, yvalid):
@@ -48,6 +55,7 @@ def complete_train(data_dir='data/'):
         xvalid_features.append(features)
         yvalid_labels.append(label)
     # perform classical model grid search
+    print('Performing grid search for best parameters ...')
     svm = SVC()
     parameters = {'kernel': ('linear', 'rbf'), 
                 'C': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -55,7 +63,9 @@ def complete_train(data_dir='data/'):
                 'probability': (True, False)}
     clf = GridSearchCV(svm, parameters)
     clf.fit(xtrain_features, ytrain_labels)
+    print(f' => best parameters are : {clf.best_params_} \n')
     # get classical model predictions
+    print('Performing Inference ... \n')
     predictions = list()
     for form in xvalid_features:
         lines_prob = clf.predict_proba(form)
