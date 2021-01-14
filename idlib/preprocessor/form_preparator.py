@@ -40,12 +40,6 @@ class FormPreparator:
 
     def segment_lines(self, gray_img, bin_img, min_line_height=10):
         # split a form image into lines
-        # define padding function
-        def pad_with(vector, pad_width, iaxis, kwargs):
-            # pad with zeros
-            pad_value = kwargs.get('padder', 0)
-            vector[:pad_width[0]] = pad_value
-            vector[-pad_width[1]:] = pad_value
         # count
         ones = np.sum(bin_img,1)
         # histogram
@@ -55,11 +49,10 @@ class FormPreparator:
         shifted = np.roll(histo, -1, 0)
         shifted[-1] = histo[-1]
         edges = histo - shifted
-        print(type((edges == -1).nonzero()))
         rising_indices = np.array((edges == -1).nonzero()).flatten()
         falling_indices = np.array((edges == 1).nonzero()).flatten()
         if len(falling_indices) < 2 or len(rising_indices) < 2:
-            return np.array([gray_img]), np.array([bin_img])
+            return [gray_img], [bin_img]
         # make starting with rising not falling 
         if falling_indices[0] < rising_indices[0]:
             falling_indices = falling_indices[1:]
@@ -72,20 +65,16 @@ class FormPreparator:
         line_count = min(rising_indices.shape[0], falling_indices.shape[0])
         for i in range(line_count):
             line_height = falling_indices[i] - rising_indices[i]
-            # split gray with padding
-            start_split = max(rising_indices[i] - line_height//3, 0)
-            end_split = min(falling_indices[i] + line_height//3, gray_img.shape[0])
+            # 1/4 of the line as padding
+            start_split = max(rising_indices[i] - line_height//4, 0)
+            end_split = min(falling_indices[i] + line_height//4, gray_img.shape[0])
+            # split with padding
             gray_line = gray_img[start_split:end_split]
-            # split binary
-            bin_line = bin_img[rising_indices[i]:falling_indices[i]]
-            # pad binary
-            bin_line = np.pad(bin_line, line_height//3, pad_with)
+            bin_line = bin_img[start_split:end_split]
             # filter if less than 10 pixels
             if line_height > min_line_height:
                 gray_lines.append(gray_line)
-                bin_lines.append(1-bin_line)
-        gray_lines = np.array(gray_lines)
-        bin_lines = np.array(bin_lines)
+                bin_lines.append(bin_line)
         return gray_lines, bin_lines
 
     def prepare_form(self, img):
