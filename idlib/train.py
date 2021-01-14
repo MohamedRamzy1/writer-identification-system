@@ -1,3 +1,5 @@
+# TODO : complete train driver implementation
+# TODO : get best parameters with grid search
 from idlib.dataset.train_loader import TrainLoader
 from idlib.feature_extractor.lbp_features import LBPFeatureExtractor
 from idlib.feature_extractor.lpq_features import LPQFeatureExtractor

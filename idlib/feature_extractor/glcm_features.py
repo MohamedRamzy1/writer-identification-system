@@ -1,3 +1,4 @@
+# TODO : review and document the code
 import numpy as np
 
 class GLCMFeaturesExtractor:

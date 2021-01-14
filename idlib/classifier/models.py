@@ -1,3 +1,4 @@
+# TODO : add best parameters for each model
 import torch
 from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier

@@ -6,7 +6,7 @@ class LineSegmentor:
     Segment out lines from form image and extract them.
     """
     @staticmethod
-    def split_in_lines(img, min_line_height=10):
+    def split_in_lines(img, bin_img, min_line_height=10):
         # split a form image into lines
         # TODO : improve line segmentation
         def pad_with(vector, pad_width, iaxis, kwargs):
