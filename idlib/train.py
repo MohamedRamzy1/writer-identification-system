@@ -5,7 +5,7 @@ from idlib.feature_extractor.lbp_features import LBPFeatureExtractor
 from idlib.feature_extractor.lpq_features import LPQFeatureExtractor
 from idlib.feature_extractor.glcm_features import GLCMFeaturesExtractor
 from idlib.feature_extractor.pca import PCA
-from idlib.preprocessor.form_preparation import FormPreparator
+from idlib.preprocessor.form_preparator import FormPreparator
 
 import torch
 from sklearn.svm import SVC
@@ -25,15 +25,17 @@ def complete_train(data_dir='data/'):
     dataloader.build_dataset()
     # initialize LBP feature extractor
     lbp_extractor = LBPFeatureExtractor()
+    # initialize form preparator
+    form_processor = FormPreparator(denoise=True)
     # get complete train/validation dataset
-    xtrain, xvalid, ytrain, yvalid = dataloader.get_complete_data()
+    xtrain, xvalid, ytrain, yvalid = dataloader.get_complete_data(forms_per_writer=5, test_split=0.2)
     # read and prepare features for train images
     xtrain_features = list()
     ytrain_labels = list()
     for img_name, label in zip(xtrain, ytrain):
         img = cv2.imread(img_name, cv2.IMREAD_GRAYSCALE)
-        lines = FormPreparator.prepare_form(img)
-        features = lbp_extractor.fit(lines)
+        lines, bin_lines = form_processor.prepare_form(img)
+        features = lbp_extractor.fit(lines, bin_lines)
         xtrain_features.extend(features)
         ytrain_labels.extend([label]*len(features))
     # read and prepare features for validation images
@@ -41,12 +43,11 @@ def complete_train(data_dir='data/'):
     yvalid_labels = list()
     for img_name, label in zip(xvalid, yvalid):
         img = cv2.imread(img_name, cv2.IMREAD_GRAYSCALE)
-        lines = FormPreparator.prepare_form(img)
-        features = lbp_extractor.fit(lines)
+        lines, bin_lines = form_processor.prepare_form(img)
+        features = lbp_extractor.fit(lines, bin_lines)
         xvalid_features.append(features)
         yvalid_labels.append(label)
-    ############################### SVM ###############################
-    # perform SVM grid search
+    # perform classical model grid search
     svm = SVC()
     parameters = {'kernel': ('linear', 'rbf'), 
                 'C': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -54,7 +55,7 @@ def complete_train(data_dir='data/'):
                 'probability': (True, False)}
     clf = GridSearchCV(svm, parameters)
     clf.fit(xtrain_features, ytrain_labels)
-    # get SVM predictions
+    # get classical model predictions
     predictions = list()
     for form in xvalid_features:
         lines_prob = clf.predict_proba(form)

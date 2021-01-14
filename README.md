@@ -10,24 +10,22 @@
 -   Refer to `experiments/dataset-exploration.ipynb` for dataset exploration.
 
 ## Pre-Processing Stage
--   Remove document noise.
--   Extract written part only.
--   Segment out lines.
--   Extract connected components _[OPTIONAL]_.
+-   [x] Remove document noise.
+-   [ ] Extract written part only.
+-   [x] Segment out lines.
+-   [ ] Extract connected components _[OPTIONAL]_.
 
 ## Feature Extraction
--   LBP Texture Descriptors.
--   GLCM (CSLBCoP) Texture Descriptors.
--   LPQ Texture Descriptors.
--   PCA (or Truncated SVD) on extracted features.
+-   [x] LBP Texture Descriptors.
+-   [ ] GLCM (CSLBCoP) Texture Descriptors _[PENDING REVIEW]_.
+-   [ ] LPQ Texture Descriptors _[PENDING REVIEW]_.
+-   [ ] PCA (or Truncated SVD) on extracted features _[PENDING REVIEW]_.
 
 ## Classifiers
--   SVM.
--   K-NN.
--   MLP.
--   RF.
--   XGB.
--   LR.
--   NB.
-
-__NOTE :__ Use _Grid Search_ for hyperparamter tuning.
+-   [x] SVM.
+-   [x] KNN.
+-   [x] MLP.
+-   [x] RF.
+-   [x] XGB.
+-   [x] LR.
+-   [x] NB.
