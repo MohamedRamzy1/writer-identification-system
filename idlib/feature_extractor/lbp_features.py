@@ -79,7 +79,7 @@ class LBPFeatureExtractor:
     def _calc_histogram(self, lbp_map, bin_img):
         # calculate masked histogram of LBP map
         # mask LBP map with binary image (only consider black pixels)
-        lbp_map[bin_img == 255] = -1
+        lbp_map[bin_img == 0] = -1
         # get unique elements count of masked LBP map
         unique, counts = np.unique(lbp_map, return_counts=True)
         lbp_counts = dict(zip(unique, counts))
