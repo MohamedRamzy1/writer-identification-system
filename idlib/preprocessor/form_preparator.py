@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+from skimage.morphology import dilation
 
 class FormPreparator:
     """
@@ -40,8 +41,10 @@ class FormPreparator:
 
     def segment_lines(self, gray_img, bin_img, min_line_height=10):
         # split a form image into lines
+        # dilate binary image
+        bin_img_dilated = dilation(bin_img)
         # count
-        ones = np.sum(bin_img,1)
+        ones = np.sum(bin_img_dilated,1)
         # histogram
         mean = np.mean(ones * 1.0) / 5
         histo = (ones > mean) * 1
