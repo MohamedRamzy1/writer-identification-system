@@ -1,0 +1,8 @@
+torch torchvision
+scikit-learn
+scikit-image
+opencv-python
+xgboost
+numpy
+tqdm
+argparse

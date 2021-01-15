@@ -29,3 +29,17 @@
 -   [x] XGB.
 -   [x] LR.
 -   [x] NB.
+
+## Installation
+
+-   Install dependencies from `requirements.txt`:
+    ```bash
+    pip3 install -r requirements.txt
+    ```
+
+## Usage
+
+-   Run `run.py` :
+    ```bash
+    python run.py -dir /path/to/data/root/directory -mode [complete-train | sampled-train | test]
+    ```
