@@ -20,11 +20,6 @@ class LBPFeatureExtractor:
         # initialize parameters
         self.radius = radius
 
-    def _binarize_line(self, gs_img):
-        # apply OTSU threshold on a grayscale image
-        _, bin_img = cv2.threshold(gs_img, 127.5, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-        return bin_img
-
     def _pad_image(self, img):
         # pad grayscale image with radius
         return np.pad(img, self.radius)
@@ -84,7 +79,7 @@ class LBPFeatureExtractor:
     def _calc_histogram(self, lbp_map, bin_img):
         # calculate masked histogram of LBP map
         # mask LBP map with binary image (only consider black pixels)
-        lbp_map[bin_img == 255] = -1
+        lbp_map[bin_img == 0] = -1
         # get unique elements count of masked LBP map
         unique, counts = np.unique(lbp_map, return_counts=True)
         lbp_counts = dict(zip(unique, counts))
@@ -95,14 +90,12 @@ class LBPFeatureExtractor:
         lbp_hist = np.divide(lbp_hist, np.mean(lbp_hist))
         return lbp_hist
 
-    def fit(self, lines):
+    def fit(self, lines, bin_lines):
         # wrapper function to extract LBP features of a list of lines
         # initialize LBP features list
         lbp_features = list()
         # loop over each line
-        for line in lines:
-            # binarize line image
-            bin_line = self._binarize_line(line)
+        for line, bin_line in zip(lines, bin_lines):
             # extract LBP feature map
             lbp_map = self._get_features(line)
             # calculate normalized LBP histogram
