@@ -13,7 +13,6 @@
 -   [x] Remove document noise.
 -   [x] Extract written part only.
 -   [x] Segment out lines.
--   [ ] Extract connected components _[OPTIONAL]_.
 
 ## Feature Extraction
 -   [x] LBP Texture Descriptors.
@@ -24,9 +23,7 @@
 ## Classifiers
 -   [x] SVM.
 -   [x] KNN.
--   [x] MLP.
 -   [x] RF.
--   [x] XGB.
 -   [x] LR.
 -   [x] NB.
 

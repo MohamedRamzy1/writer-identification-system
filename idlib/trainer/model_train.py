@@ -1,10 +1,8 @@
-import torch
 from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
-import xgboost as xgb
 import numpy as np
 
 
@@ -59,27 +57,6 @@ def rf_train(xtrain, ytrain, xvalid, yvalid):
         return False
 
 
-def xgb_train(xtrain, ytrain, xvalid, yvalid):
-    # train xgb classifier on train samples features
-    # define xgb classfier
-    clf = xgb.XGBClassifier(
-            max_depth=7, n_estimators=200,
-            colsample_bytree=0.8, subsample=0.8,
-            n_jobs=-1, learning_rate=0.1
-        )
-    # fit model to train data
-    clf.fit(xtrain, ytrain)
-    # get predictions
-    lines_prob = clf.predict_proba(xvalid)
-    lines_prob = np.sum(lines_prob, axis=0)
-    prediction = np.argmax(lines_prob)
-    # check whether the test sample if correct or not
-    if yvalid == prediction:
-        return True
-    else:
-        return False
-
-
 def lr_train(xtrain, ytrain, xvalid, yvalid):
     # train lr classifier on train samples features
     # define lr classfier
@@ -114,8 +91,3 @@ def nb_train(xtrain, ytrain, xvalid, yvalid):
         return True
     else:
         return False
-
-
-def mlp_train(xtrain, ytrain, xvalid, yvalid):
-    # train mlp classifier on train samples features
-    pass

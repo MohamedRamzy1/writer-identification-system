@@ -7,6 +7,7 @@ import numpy as np
 import os
 import time
 
+
 def test(data_dir='data/test_samples/'):
     # intialize test dataloader
     dataloader = TestLoader(data_dir=data_dir)

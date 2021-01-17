@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 from skimage.morphology import dilation
 
+
 class FormPreparator:
     """
     Form Preparator class
@@ -24,7 +25,9 @@ class FormPreparator:
 
     def binarize_image(self, img):
         # apply OTSU threshold on a grayscale image
-        _, bin_img = cv2.threshold(img, 127.5, 1, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+        _, bin_img = cv2.threshold(
+            img, 127.5, 1, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU
+        )
         return bin_img
 
     def perform_denoise(self, img):
@@ -38,17 +41,19 @@ class FormPreparator:
         # get the edges of the img using canny edge detection
         edges = cv2.Canny(img, 50, 200)
         # extract all lines in the image
-        lines = cv2.HoughLinesP(edges, 1, np.pi/180, threshold=8, minLineLength=80, maxLineGap=1)
+        lines = cv2.HoughLinesP(
+            edges, 1, np.pi/180, threshold=8, minLineLength=80, maxLineGap=1
+        )
         # hold the horizontal lines
         horizontal_rows = []
         # loop over the found lines to get the horizontal ones
         for line in lines:
-            # take the horizntal line starting from the second one 
+            # take the horizntal line starting from the second one
             if (line[0][1] - line[0][3] < 20 and line[0][1] > 420):
                 horizontal_rows.append(line[0][1])
         # sort the lines to take the first and last one
         horizontal_rows.sort()
-        # crop the image based on the horizontal lines with margin 20 pixels up and down
+        # crop the image based on the horizontal lines with margin 20 pixels
         return img[horizontal_rows[0]+20:horizontal_rows[-1]-20]
 
     def segment_lines(self, gray_img, bin_img, min_line_height=10):
@@ -68,10 +73,10 @@ class FormPreparator:
         falling_indices = np.array((edges == 1).nonzero()).flatten()
         if len(falling_indices) < 2 or len(rising_indices) < 2:
             return [gray_img], [bin_img]
-        # make starting with rising not falling 
+        # make starting with rising not falling
         if falling_indices[0] < rising_indices[0]:
             falling_indices = falling_indices[1:]
-        # make ending with falling not rising 
+        # make ending with falling not rising
         if rising_indices[-1] > falling_indices[-1]:
             rising_indices = rising_indices[:-1]
         # cut image on histo
@@ -81,8 +86,12 @@ class FormPreparator:
         for i in range(line_count):
             line_height = falling_indices[i] - rising_indices[i]
             # 1/4 of the line as padding
-            start_split = max(rising_indices[i] - line_height//4, 0)
-            end_split = min(falling_indices[i] + line_height//4, gray_img.shape[0])
+            start_split = max(
+                rising_indices[i] - line_height//4, 0
+            )
+            end_split = min(
+                falling_indices[i] + line_height//4, gray_img.shape[0]
+            )
             # split with padding
             gray_line = gray_img[start_split:end_split]
             bin_line = bin_img[start_split:end_split]

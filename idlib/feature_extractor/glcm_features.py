@@ -1,10 +1,11 @@
 # TODO : review and document the code
 import numpy as np
 
+
 class GLCMFeaturesExtractor:
 
     def __calculate_glcm(self, img):
-        glcm_matrix = np.zeros((256,256))
+        glcm_matrix = np.zeros((256, 256))
         unique_pixels = np.unique(img.astype(np.uint8))
         for first in unique_pixels:
             for second in unique_pixels:

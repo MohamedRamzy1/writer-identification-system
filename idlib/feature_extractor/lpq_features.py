@@ -2,6 +2,7 @@
 import scipy.fft as fft
 import numpy as np
 
+
 class LPQFeatureExtractor:
 
     def __init__(self, window_size=5, nbins=256):
@@ -23,12 +24,15 @@ class LPQFeatureExtractor:
                 cy = sub_w // 2
                 fft2_img = fft.fft2(sub_img)
 
-                rsp1 = fft2_img[cx,cy+1]
-                rsp2 = fft2_img[cx+1,cy]
-                rsp3 = fft2_img[cx+1,cy+1]
-                rsp4 = fft2_img[cx-1,cy+1]
+                rsp1 = fft2_img[cx, cy+1]
+                rsp2 = fft2_img[cx+1, cy]
+                rsp3 = fft2_img[cx+1, cy+1]
+                rsp4 = fft2_img[cx-1, cy+1]
 
-                aggregated_rsp = np.array([rsp1.real, rsp2.real, rsp3.real, rsp4.real, rsp1.imag, rsp2.imag, rsp3.imag, rsp4.imag])
+                aggregated_rsp = np.array([
+                    rsp1.real, rsp2.real, rsp3.real, rsp4.real,
+                    rsp1.imag, rsp2.imag, rsp3.imag, rsp4.imag
+                    ])
                 bit_vector = list(aggregated_rsp > 0)
 
                 lpq_code = 0
@@ -41,7 +45,7 @@ class LPQFeatureExtractor:
 
                 lpq_codes.append(lpq_code)
 
-        histogram, _ = np.histogram(np.array(lpq_codes), bins = self.nbins)
+        histogram, _ = np.histogram(np.array(lpq_codes), bins=self.nbins)
 
         return histogram
 

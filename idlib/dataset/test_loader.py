@@ -1,7 +1,6 @@
-import numpy as np
 import os
-import random
 import cv2
+
 
 class TestLoader:
     """
@@ -20,7 +19,9 @@ class TestLoader:
     num_samples_per_writer : int
         number of samples per writer
     """
-    def __init__(self, data_dir='data/test_samples/', num_writers_per_test=3, num_samples_per_writer=2):
+    def __init__(
+            self, data_dir='data/test_samples/',
+            num_writers_per_test=3, num_samples_per_writer=2):
         # initialize parameters
         self.data_dir = os.path.join(data_dir, 'data')
         self.num_writers_per_test = num_writers_per_test
@@ -40,7 +41,8 @@ class TestLoader:
         xtest_dir = os.path.join(case_dir, 'test.png')
         for writer in range(self.num_writers_per_test):
             writer_dir = os.path.join(case_dir, str(writer+1))
-            writer_samples = [os.path.join(writer_dir, f'{str(sample+1)}.png') for sample in range(self.num_samples_per_writer)]
+            writer_samples = [os.path.join(writer_dir, f'{str(sample+1)}.png')
+                              for sample in range(self.num_samples_per_writer)]
             xtrain_dir.extend(writer_samples)
             ytrain.extend([writer]*self.num_samples_per_writer)
         # read form sample images

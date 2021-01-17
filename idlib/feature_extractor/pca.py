@@ -1,6 +1,6 @@
 # TODO : review and document the code
-import scipy.fft as fft
 import numpy as np
+
 
 class PCA:
 
@@ -13,12 +13,12 @@ class PCA:
         cov = np.cov(X_centered)
         eigen_values, eigen_vectors = np.linalg.eig(cov)
         sorted_indices = eigen_values.argsort()[::-1]
-        eigen_vectors = eigen_vectors[:,sorted_indices]
+        eigen_vectors = eigen_vectors[:, sorted_indices]
         eigen_values = eigen_values[sorted_indices]
         ncomponents = 0
         sum_values = eigen_values.sum() + 1e-11
         cum_sum = 0
-        for i in range(1,len(eigen_values)+1):
+        for i in range(1, len(eigen_values)+1):
             cum_sum += eigen_values[i]
             if(cum_sum / sum_values > self.variance_thresh):
                 break
