@@ -30,7 +30,7 @@ def complete_train(data_dir='data/'):
     xtrain_features = list()
     ytrain_labels = list()
     for img_name, label in zip(xtrain, ytrain):
-        img = cv2.imread(img_name, cv2.IMREAD_GRAYSCALE)
+        img = cv2.cvtColor(cv2.imread(img_name), cv2.COLOR_BGR2GRAY)
         lines, bin_lines = form_processor.prepare_form(img)
         features = lbp_extractor.fit(lines, bin_lines)
         xtrain_features.extend(features)
@@ -40,7 +40,7 @@ def complete_train(data_dir='data/'):
     xvalid_features = list()
     yvalid_labels = list()
     for img_name, label in zip(xvalid, yvalid):
-        img = cv2.imread(img_name, cv2.IMREAD_GRAYSCALE)
+        img = cv2.cvtColor(cv2.imread(img_name), cv2.COLOR_BGR2GRAY)
         lines, bin_lines = form_processor.prepare_form(img)
         features = lbp_extractor.fit(lines, bin_lines)
         xvalid_features.append(features)
@@ -80,13 +80,13 @@ def sampled_train(data_dir='data/'):
         xtrain_features = list()
         ytrain_labels = list()
         for img_name, label in zip(xtrain, ytrain):
-            img = cv2.imread(img_name, cv2.IMREAD_GRAYSCALE)
+            img = cv2.cvtColor(cv2.imread(img_name), cv2.COLOR_BGR2GRAY)
             lines, bin_lines = form_processor.prepare_form(img)
             features = lbp_extractor.fit(lines, bin_lines)
             xtrain_features.extend(features)
             ytrain_labels.extend([label]*len(features))
         # extract test sample features
-        img = cv2.imread(xvalid, cv2.IMREAD_GRAYSCALE)
+        img = cv2.cvtColor(cv2.imread(xvalid), cv2.COLOR_BGR2GRAY)
         lines, bin_lines = form_processor.prepare_form(img)
         test_features = lbp_extractor.fit(lines, bin_lines)
         # train classifier on train samples features

@@ -47,8 +47,8 @@ class TestLoader:
             ytrain.extend([writer]*self.num_samples_per_writer)
         # read form sample images
         xtrain = list()
-        xtest = cv2.imread(xtest_dir, cv2.IMREAD_GRAYSCALE)
+        xtest = cv2.cvtColor(cv2.imread(xtest_dir), cv2.COLOR_BGR2GRAY)
         for sample in xtrain_dir:
-            xtrain.append(cv2.imread(sample, cv2.IMREAD_GRAYSCALE))
+            xtrain.append(cv2.cvtColor(cv2.imread(sample), cv2.COLOR_BGR2GRAY))
         # return train lists and test sample
         return xtrain, ytrain, xtest
