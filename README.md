@@ -18,7 +18,7 @@
 -   [x] LBP Texture Descriptors.
 -   [ ] GLCM (CSLBCoP) Texture Descriptors _[PENDING REVIEW]_.
 -   [ ] LPQ Texture Descriptors _[PENDING REVIEW]_.
--   [ ] PCA (or Truncated SVD) on extracted features _[PENDING REVIEW]_.
+-   [X] PCA (or Truncated SVD) on extracted features.
 
 ## Classifiers
 -   [x] SVM.
