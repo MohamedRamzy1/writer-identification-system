@@ -30,6 +30,7 @@ class PCA:
         cov = np.cov(X_centered)
         # calculate the eigen values and vectors of the covariance metrix 
         eigen_values, eigen_vectors = np.linalg.eig(cov)
+        
         #sort the eigen values descendingly 
         sorted_indices = eigen_values.argsort()[::-1]
         eigen_vectors = eigen_vectors[:, sorted_indices]
