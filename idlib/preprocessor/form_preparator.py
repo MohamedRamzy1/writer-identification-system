@@ -53,8 +53,10 @@ class FormPreparator:
                 horizontal_rows.append(line[0][1])
         # sort the lines to take the first and last one
         horizontal_rows.sort()
-        # crop the image based on the horizontal lines with margin 20 pixels
-        return img[horizontal_rows[0]+20:horizontal_rows[-1]-20]
+        # crop the image based on the horizontal lines
+        # with margin 20 pixels up and down
+        # and margin 125 pixels left and right
+        return img[horizontal_rows[0]+20:horizontal_rows[-1]-20, 125:-125]
 
     def segment_lines(self, gray_img, bin_img, min_line_height=10):
         # split a form image into lines
