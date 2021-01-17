@@ -105,13 +105,13 @@ class FormPreparator:
 
     def prepare_form(self, img):
         # prepare a form image
-        # perform denoising (if applicable)
-        if self.denoise:
-            img = self.perform_denoise(img)
         # clip out written parts
         clipped_img = self.clip_form(img)
         # binarize image
         bin_img = self.binarize_image(clipped_img)
+        # perform denoising (if applicable)
+        if self.denoise:
+            smoothed_img = self.perform_denoise(clipped_img)
         # segment lines from form image
-        lines, bin_lines = self.segment_lines(clipped_img, bin_img)
+        lines, bin_lines = self.segment_lines(smoothed_img, bin_img)
         return lines, bin_lines
