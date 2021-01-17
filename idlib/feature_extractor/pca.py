@@ -35,9 +35,3 @@ class PCA:
             compressed_features = self.__calculate_pca(features)
             compressed_features_list.append(compressed_features)
         return compressed_features_list
-                
-
-                
-            
-                
-                

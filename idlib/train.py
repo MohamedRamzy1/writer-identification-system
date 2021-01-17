@@ -1,23 +1,11 @@
-# TODO : complete train driver implementation
-# TODO : get best parameters with grid search
 from idlib.dataset.train_loader import TrainLoader
 from idlib.feature_extractor.lbp_features import LBPFeatureExtractor
-from idlib.feature_extractor.lpq_features import LPQFeatureExtractor
-from idlib.feature_extractor.glcm_features import GLCMFeaturesExtractor
-from idlib.feature_extractor.pca import PCA
 from idlib.preprocessor.form_preparator import FormPreparator
+from idlib.trainer.model_gird_search import svm_grid_search, knn_grid_search
+from idlib.trainer.model_train import svm_train
 
-import torch
-from sklearn.svm import SVC
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.linear_model import LogisticRegression
-import xgboost as xgb
 import cv2
-import numpy as np
-from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import accuracy_score
+
 
 def complete_train(data_dir='data/'):
     # perform training and grid search on complete data
@@ -33,7 +21,9 @@ def complete_train(data_dir='data/'):
     form_processor = FormPreparator(denoise=True)
     # get complete train/validation dataset
     print('Reading dataset ... \n')
-    xtrain, xvalid, ytrain, yvalid = dataloader.get_complete_data(forms_per_writer=5, test_split=0.2)
+    xtrain, xvalid, ytrain, yvalid = dataloader.get_complete_data(
+        forms_per_writer=5, test_split=0.2
+        )
     # read and prepare features for train images
     print('Preparing train features ... \n')
     xtrain_features = list()
@@ -54,24 +44,17 @@ def complete_train(data_dir='data/'):
         features = lbp_extractor.fit(lines, bin_lines)
         xvalid_features.append(features)
         yvalid_labels.append(label)
-    # perform classical model grid search
-    print('Performing grid search for best parameters ...')
-    svm = SVC()
-    parameters = {'kernel': ('linear', 'rbf'), 
-                'C': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                'gamma': ('scale', 'auto'),
-                'probability': (True, False)}
-    clf = GridSearchCV(svm, parameters)
-    clf.fit(xtrain_features, ytrain_labels)
-    print(f' => best parameters are : {clf.best_params_} \n')
-    # get classical model predictions
-    print('Performing Inference ... \n')
-    predictions = list()
-    for form in xvalid_features:
-        lines_prob = clf.predict_proba(form)
-        lines_prob = np.sum(lines_prob, axis=0)
-        predictions.append(clf.classes_[np.argmax(lines_prob)])
-    print (f'svm accuracy: {accuracy_score(yvalid_labels, predictions)*100}%')
+    # perform svm grid search
+    print('Performing grid search on SVM for best parameters ...')
+    svm_grid_search(
+        xtrain_features, ytrain_labels, xvalid_features, yvalid_labels
+    )
+    # perform knn grid search
+    print('Performing grid search on KNN for best parameters ...')
+    knn_grid_search(
+        xtrain_features, ytrain_labels, xvalid_features, yvalid_labels
+    )
+
 
 def sampled_train(data_dir='data/'):
     # perform training and grid search on sampled data
@@ -82,12 +65,10 @@ def sampled_train(data_dir='data/'):
     lbp_extractor = LBPFeatureExtractor(radius=3)
     # initialize form preparator
     form_processor = FormPreparator(denoise=True)
-    # initialize classifier
-    clf = SVC(C=5.0, gamma='auto', probability=True, verbose=True)
     # loop over all test cases
-    total_cases = 0
+    total_cases = 100
     correct_cases = 0
-    for test_case in range(100):
+    for test_case in range(total_cases):
         # read test case images
         xtrain, xvalid, ytrain, yvalid = dataloader.get_data_samples()
         # extract train samples features
@@ -104,12 +85,6 @@ def sampled_train(data_dir='data/'):
         lines, bin_lines = form_processor.prepare_form(img)
         test_features = lbp_extractor.fit(lines, bin_lines)
         # train classifier on train samples features
-        clf.fit(xtrain_features, ytrain_labels)
-        # get predictions
-        lines_prob = clf.predict_proba(test_features)
-        lines_prob = np.sum(lines_prob, axis=0)
-        prediction = np.argmax(lines_prob)
-        total_cases += 1
-        if yvalid == prediction:
+        if svm_train(xtrain_features, ytrain_labels, test_features, yvalid):
             correct_cases += 1
-    print (f'svm accuracy: {float(correct_cases/total_cases)*100}%')
+    print(f'model accuracy: {float(correct_cases/total_cases)*100}%')

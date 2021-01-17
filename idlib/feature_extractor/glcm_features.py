@@ -20,9 +20,3 @@ class GLCMFeaturesExtractor:
             glcm_features = self.__calculate_glcm(line)
             total_glcm_features.append(glcm_features)
         return total_glcm_features
-                
-
-                
-            
-                
-                

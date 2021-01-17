@@ -51,9 +51,3 @@ class LPQFeatureExtractor:
             histogram = self.__calculate_lpq(line.squeeze())
             lqp_features.append(histogram)
         return lqp_features
-                
-
-                
-            
-                
-                

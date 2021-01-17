@@ -1,4 +1,3 @@
-# TODO : add best parameters for each model
 import torch
 from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
@@ -6,7 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
 import xgboost as xgb
-import numpy as np
+
 
 class SupportVectorMachine:
     """
@@ -28,6 +27,7 @@ class SupportVectorMachine:
         # predict class (probability) of data point x
         return self.clf.predict_proba(x)
 
+
 class KNearestNeighbors:
     """
     KNN Classifier
@@ -47,6 +47,7 @@ class KNearestNeighbors:
     def predict_proba(self, x):
         # predict class (probability) of data point x
         return self.clf.predict_proba(x)
+
 
 class RandomForest:
     """
@@ -68,14 +69,18 @@ class RandomForest:
         # predict class (probability) of data point x
         return self.clf.predict_proba(x)
 
+
 class GradientBoosting:
     """
     Linear Classifier With Gradient Boosting
     """
     def __init__(self):
         # initialize classifier
-        self.clf = xgb.XGBClassifier(max_depth=7, n_estimators=200, colsample_bytree=0.8, 
-                                    subsample=0.8, n_jobs=-1, learning_rate=0.1)
+        self.clf = xgb.XGBClassifier(
+            max_depth=7, n_estimators=200,
+            colsample_bytree=0.8, subsample=0.8,
+            n_jobs=-1, learning_rate=0.1
+        )
 
     def fit(self, x, y):
         # train classifier
@@ -88,6 +93,7 @@ class GradientBoosting:
     def predict_proba(self, x):
         # predict class (probability) of data point x
         return self.clf.predict_proba(x)
+
 
 class LogisticRegressor:
     """
@@ -95,7 +101,9 @@ class LogisticRegressor:
     """
     def __init__(self):
         # initialize classifier
-        self.clf = LogisticRegression(C=1.0, max_iter=1000, n_jobs=-1, verbose=True)
+        self.clf = LogisticRegression(
+            C=1.0, max_iter=100, n_jobs=-1, verbose=True
+        )
 
     def fit(self, x, y):
         # train classifier
@@ -108,6 +116,7 @@ class LogisticRegressor:
     def predict_proba(self, x):
         # predict class (probability) of data point x
         return self.clf.predict_proba(x)
+
 
 class NaiveBayes:
     """
@@ -129,13 +138,14 @@ class NaiveBayes:
         # predict class (probability) of data point x
         return self.clf.predict_proba(x)
 
+
 class Perceptron(torch.nn.Module):
     """
     Two-layer Perceptron Classifier
     """
     def __init__(self, input_dim=256, n_classes=3):
         # initialize classifier layers and activation functions
-        super(Perceptron,self).__init__()
+        super(Perceptron, self).__init__()
         # fully-connected layers
         self.linear_first = torch.nn.Linear(input_dim, int(input_dim/2))
         self.linear_second = torch.nn.Linear(int(input_dim/2), n_classes)
