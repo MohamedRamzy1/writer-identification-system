@@ -34,17 +34,29 @@ class FormPreparator:
         return smooth_img
 
     def clip_form(self, img):
-        # TODO : perform better form clipping
-        # get the written part from the form
-        img = img[int(0.25*img.shape[0]):int(0.7*img.shape[0]), int(0.1*img.shape[1]):int(0.9*img.shape[1])]
-        return img
+        # extract the hand written part of the image
+        # get the edges of the img using canny edge detection
+        edges = cv2.Canny(img, 50, 200)
+        # extract all lines in the image
+        lines = cv2.HoughLinesP(edges, 1, np.pi/180, threshold=8, minLineLength=80, maxLineGap=1)
+        # hold the horizontal lines
+        horizontal_rows = []
+        # loop over the found lines to get the horizontal ones
+        for line in lines:
+            # take the horizntal line starting from the second one 
+            if (line[0][1] - line[0][3] < 20 and line[0][1] > 420):
+                horizontal_rows.append(line[0][1])
+        # sort the lines to take the first and last one
+        horizontal_rows.sort()
+        # crop the image based on the horizontal lines with margin 20 pixels up and down
+        return img[horizontal_rows[0]+20:horizontal_rows[-1]-20]
 
     def segment_lines(self, gray_img, bin_img, min_line_height=10):
         # split a form image into lines
         # dilate binary image
         bin_img_dilated = dilation(bin_img)
         # count
-        ones = np.sum(bin_img_dilated,1)
+        ones = np.sum(bin_img_dilated, 1)
         # histogram
         mean = np.mean(ones * 1.0) / 5
         histo = (ones > mean) * 1
