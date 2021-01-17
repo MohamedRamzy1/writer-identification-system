@@ -1,5 +1,7 @@
+# TODO : review and document the code
 import scipy.fft as fft
 import numpy as np
+
 
 class LPQFeatureExtractor:
 
@@ -66,9 +68,3 @@ class LPQFeatureExtractor:
             histogram = self.__calculate_lpq(line.squeeze())
             lqp_features.append(histogram)
         return lqp_features
-                
-
-                
-            
-                
-                

@@ -1,9 +1,8 @@
-import numpy as np
 import os
 import random
-from collections import Counter
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
+
 
 class TrainLoader:
     """
@@ -46,19 +45,43 @@ class TrainLoader:
             if data_point[1] in self.writers_forms_dict.keys():
                 # specify forms folder based on first letter
                 if data_point[0][0] < 'e':
-                    self.writers_forms_dict[data_point[1]].append(os.path.join(self.data_dir, f'formsA-D/{data_point[0]}.png'))
+                    self.writers_forms_dict[data_point[1]].append(
+                        os.path.join(
+                            self.data_dir, f'formsA-D/{data_point[0]}.png'
+                        )
+                    )
                 elif data_point[0][0] < 'i':
-                    self.writers_forms_dict[data_point[1]].append(os.path.join(self.data_dir, f'formsE-H/{data_point[0]}.png'))
+                    self.writers_forms_dict[data_point[1]].append(
+                        os.path.join(
+                            self.data_dir, f'formsE-H/{data_point[0]}.png'
+                        )
+                    )
                 else:
-                    self.writers_forms_dict[data_point[1]].append(os.path.join(self.data_dir, f'formsI-Z/{data_point[0]}.png'))
+                    self.writers_forms_dict[data_point[1]].append(
+                        os.path.join(
+                            self.data_dir, f'formsI-Z/{data_point[0]}.png'
+                        )
+                    )
             else:
                 # specify forms folder based on first letter
                 if data_point[0][0] < 'e':
-                    self.writers_forms_dict[data_point[1]] = [os.path.join(self.data_dir, f'formsA-D/{data_point[0]}.png')]
+                    self.writers_forms_dict[data_point[1]] = [
+                        os.path.join(
+                            self.data_dir, f'formsA-D/{data_point[0]}.png'
+                        )
+                    ]
                 elif data_point[0][0] < 'i':
-                    self.writers_forms_dict[data_point[1]] = [os.path.join(self.data_dir, f'formsE-H/{data_point[0]}.png')]
+                    self.writers_forms_dict[data_point[1]] = [
+                        os.path.join(
+                            self.data_dir, f'formsE-H/{data_point[0]}.png'
+                        )
+                    ]
                 else:
-                    self.writers_forms_dict[data_point[1]] = [os.path.join(self.data_dir, f'formsI-Z/{data_point[0]}.png')]
+                    self.writers_forms_dict[data_point[1]] = [
+                        os.path.join(
+                            self.data_dir, f'formsI-Z/{data_point[0]}.png'
+                        )
+                    ]
 
     def build_dataset(self):
         # build forms dataset dictionary
@@ -66,9 +89,13 @@ class TrainLoader:
         self._list_data(data_list)
 
     def get_data_samples(self, num_writers=3, num_train_samples=2):
-        # get a random dataset sample (consists of specific number of writers and samples per writer)
+        # get a random dataset sample
+        # (consists of specific number of writers and samples per writer)
         # get all writers with number of forms more that samples per writer
-        writers_list = [writer for writer in self.writers_forms_dict.keys() if len(self.writers_forms_dict[writer]) > num_train_samples]
+        writers_list = [writer for writer in self.writers_forms_dict.keys()
+                        if len(
+                            self.writers_forms_dict[writer]
+                        ) > num_train_samples]
         # select random writers
         train_writers = random.choices(writers_list, k=num_writers)
         # select a random test writer from train writers
@@ -79,45 +106,51 @@ class TrainLoader:
         # list train and validation data samples
         xtrain = list()
         ytrain = list()
-        xvalid = list()
-        yvalid =  list()
+        xvalid = None
+        yvalid = None
         for writer in train_writers:
-            # check whether the writer is selected as a test to select one more form
+            # check whether the writer is selected as a test
             if writer == test_writer:
                 # select random forms from writer
-                rand_choices = random.choices(self.writers_forms_dict[writer], k=num_train_samples+1)
+                rand_choices = random.choices(
+                    self.writers_forms_dict[writer], k=num_train_samples+1
+                )
                 # get a single test form
-                xvalid.append(random.choice(rand_choices))
-                yvalid.append(writer)
+                xvalid = random.choice(rand_choices)
+                yvalid = writer
                 rand_choices.remove(xvalid)
                 # append to xtrain and ytrain
                 xtrain.extend(rand_choices)
                 ytrain.extend([writer]*num_train_samples)
             else:
-                # select random forms from writer and append to xtrain and ytrain
-                xtrain.extend(random.choices(self.writers_forms_dict[writer], k=num_train_samples))
+                # select random forms from writer
+                xtrain.extend(
+                    random.choices(
+                        self.writers_forms_dict[writer], k=num_train_samples
+                    )
+                )
                 ytrain.extend([writer]*num_train_samples)
         # encode labels
         ytrain = label_encoder.transform(ytrain)
-        yvalid = label_encoder.transform(yvalid)
+        yvalid = label_encoder.transform([yvalid])[0]
         return xtrain, xvalid, ytrain, yvalid
 
-    def get_complete_data(self, specific_writers=None, test_split=0.2):
-        # get complete dataset of some or all writers
-        # if no specific writers are provided return all writers
-        if not specific_writers:
-            specific_writers = self.writers_forms_dict.keys()
+    def get_complete_data(self, forms_per_writer=5, test_split=0.2):
+        # get complete dataset of writers with specific number of forms
         # list all forms for the specified writers
         X = list()
         Y = list()
-        for writer in specific_writers:
-            X.extend(self.writers_forms_dict[writer])
-            Y.extend([writer]*len(self.writers_forms_dict[writer]))
+        for writer in self.writers_forms_dict.keys():
+            if len(self.writers_forms_dict[writer]) == forms_per_writer:
+                X.extend(self.writers_forms_dict[writer])
+                Y.extend([writer]*forms_per_writer)
         # encode labels
         label_encoder = LabelEncoder()
-        label_encoder.fit(specific_writers)
+        label_encoder.fit(Y)
         Y = label_encoder.transform(Y)
         # train / validation split with stratify
-        xtrain, xvalid, ytrain, yvalid = train_test_split(X, Y, stratify=Y, random_state=42,
-                                                            test_size=test_split, shuffle=True)
+        xtrain, xvalid, ytrain, yvalid = train_test_split(
+            X, Y, stratify=Y, random_state=42,
+            test_size=test_split, shuffle=True
+        )
         return xtrain, xvalid, ytrain, yvalid

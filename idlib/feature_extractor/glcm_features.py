@@ -1,4 +1,6 @@
+# TODO : review and document the code
 import numpy as np
+
 
 class GLCMFeaturesExtractor:
 
@@ -24,9 +26,3 @@ class GLCMFeaturesExtractor:
             glcm_features = self.__calculate_glcm(line)
             total_glcm_features.append(glcm_features)
         return total_glcm_features
-                
-
-                
-            
-                
-                
