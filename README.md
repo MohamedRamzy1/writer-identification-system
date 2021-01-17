@@ -11,7 +11,7 @@
 
 ## Pre-Processing Stage
 -   [x] Remove document noise.
--   [ ] Extract written part only.
+-   [x] Extract written part only.
 -   [x] Segment out lines.
 -   [ ] Extract connected components _[OPTIONAL]_.
 
