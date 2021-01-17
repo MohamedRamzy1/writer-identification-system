@@ -9,7 +9,7 @@ import numpy as np
 def svm_train(xtrain, ytrain, xvalid, yvalid):
     # train svm classifier on train samples features
     # define svm classfier
-    clf = SVC(C=5.0, gamma='auto', probability=True, verbose=True)
+    clf = SVC(C=5.0, gamma='auto', probability=True, verbose=False)
     # fit model to train data
     clf.fit(xtrain, ytrain)
     # get predictions
@@ -43,7 +43,7 @@ def knn_train(xtrain, ytrain, xvalid, yvalid):
 def rf_train(xtrain, ytrain, xvalid, yvalid):
     # train rf classifier on train samples features
     # define rf classfier
-    clf = RandomForestClassifier(n_jobs=-1, verbose=True)
+    clf = RandomForestClassifier(n_jobs=-1, verbose=False)
     # fit model to train data
     clf.fit(xtrain, ytrain)
     # get predictions
@@ -61,7 +61,7 @@ def lr_train(xtrain, ytrain, xvalid, yvalid):
     # train lr classifier on train samples features
     # define lr classfier
     clf = LogisticRegression(
-            C=1.0, max_iter=100, n_jobs=-1, verbose=True
+            C=1.0, max_iter=100, n_jobs=-1, verbose=False
         )
     # fit model to train data
     clf.fit(xtrain, ytrain)

@@ -5,6 +5,7 @@ from idlib.trainer.model_gird_search import svm_grid_search, knn_grid_search
 from idlib.trainer.model_train import svm_train
 
 import cv2
+from tqdm import tqdm
 
 
 def complete_train(data_dir='data/'):
@@ -59,16 +60,20 @@ def complete_train(data_dir='data/'):
 def sampled_train(data_dir='data/'):
     # perform training and grid search on sampled data
     # intialize train dataloader
+    print('Initializing dataloader ... \n')
     dataloader = TrainLoader(data_dir=data_dir)
     dataloader.build_dataset()
     # initialize LBP feature extractor
+    print('Initializing LBP feature extractor ... \n')
     lbp_extractor = LBPFeatureExtractor(radius=3)
     # initialize form preparator
+    print('Initializing form preparator ... \n')
     form_processor = FormPreparator(denoise=True)
     # loop over all test cases
+    print('Performing sampled data training ... \n')
     total_cases = 100
     correct_cases = 0
-    for test_case in range(total_cases):
+    for test_case in tqdm(range(total_cases)):
         # read test case images
         xtrain, xvalid, ytrain, yvalid = dataloader.get_data_samples()
         # extract train samples features
@@ -87,4 +92,5 @@ def sampled_train(data_dir='data/'):
         # train classifier on train samples features
         if svm_train(xtrain_features, ytrain_labels, test_features, yvalid):
             correct_cases += 1
+    print()
     print(f'model accuracy: {float(correct_cases/total_cases)*100}%')

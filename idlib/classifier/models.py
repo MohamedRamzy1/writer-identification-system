@@ -13,7 +13,7 @@ class SupportVectorMachine:
     """
     def __init__(self):
         # initialize classifier
-        self.clf = SVC(C=5.0, gamma='auto', probability=True, verbose=True)
+        self.clf = SVC(C=5.0, gamma='auto', probability=True, verbose=False)
 
     def fit(self, x, y):
         # train classifier
@@ -55,7 +55,7 @@ class RandomForest:
     """
     def __init__(self):
         # initialize classifier
-        self.clf = RandomForestClassifier(n_jobs=-1, verbose=True)
+        self.clf = RandomForestClassifier(n_jobs=-1, verbose=False)
 
     def fit(self, x, y):
         # train classifier
@@ -102,7 +102,7 @@ class LogisticRegressor:
     def __init__(self):
         # initialize classifier
         self.clf = LogisticRegression(
-            C=1.0, max_iter=100, n_jobs=-1, verbose=True
+            C=1.0, max_iter=100, n_jobs=-1, verbose=False
         )
 
     def fit(self, x, y):
