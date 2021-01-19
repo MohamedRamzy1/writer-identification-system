@@ -1,3 +1,4 @@
+
 \subsection{Form Clipping}
 In Form Clipping we remove the upper and lower part of the image to take the hand written part only.
 This done by extracting the edges of the image using Canny edge detection the detect the lines in the edge image using opencv houghlineP function.
@@ -17,3 +18,22 @@ sample results are shown in Figure \ref{fig:clipping-example} and Figure \ref{fi
     \caption{Image after clipping}
     \label{fig:clipping-result}
 \end{figure}
+
+
+\subsection{Line Segmentation}
+As extracting features from lines is better than from the whole document, and classifying on each line helps to take a majority vote, We implemented a vectorized module to segment the document into lines using row histogram as shown in \ref{fig:histogram}. The docs are scanned vertically, so as shown in \ref{fig:bounding-boxes}, Detecting minima on a row histogram can get the boundaries to cut the lines on, as they are almost horizontal. We didn't use the concept of local minima in Detecting peaks as there're a lot of local minima that are not considered as line boundaries. We considered that the line boundary exists when there's an abrupt change in the histogram that makes it jump over 1/5 of its mean. Some lines can be splitted into two lines, one of them has a small height. This happens because of different hand-writings. To tackle this problem, we filtered all lines that have black-pixel count less than 1/6 of the mean of this count on all extracted lines. 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/histo.png}
+    \caption{Row Histogram on Document to segment lines}
+    \label{fig:histogram}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/BB.png}
+    \caption{Resulting Bounding Boxes generated using Histogram}
+    \label{fig:bounding-boxes}
+\end{figure}
+
