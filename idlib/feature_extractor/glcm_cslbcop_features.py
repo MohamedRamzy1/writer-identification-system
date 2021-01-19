@@ -6,7 +6,10 @@ class GLCMCSLBCoPFeaturesExtractor:
     '''
     GLCM_CSLBCoP Feature based on CSLBP
     ----
-    based on this paper: https://www.researchgate.net/publication/281559563_Center_Symmetric_Local_Binary_Co-occurrence_Pattern_for_Texture_Face_and_Bio-medical_Image_Retrieval
+    based on this paper :
+    "https://www.researchgate.net/publication/
+    281559563_Center_Symmetric_Local_Binary_
+    Co-occurrence_Pattern_for_Texture_Face_and_Bio-medical_Image_Retrieval"
     ----
 
     Attributes
@@ -20,24 +23,25 @@ class GLCMCSLBCoPFeaturesExtractor:
         GLCM2_flattened = GLCM2.flatten()
         GLCM3_flattened = GLCM3.flatten()
         GLCM4_flattened = GLCM4.flatten()
-        FV = np.concatenate([GLCM1_flattened, GLCM2_flattened, GLCM3_flattened, GLCM4_flattened])
+        FV = np.concatenate([
+            GLCM1_flattened, GLCM2_flattened, GLCM3_flattened, GLCM4_flattened
+        ])
         return FV
 
     def _Calculate_GLCM_CSLBCoP(self, LBP_map):
         # GLCM matrix on distances (0, 1) and angles (0, -45, -90, -135)
-        GLCM = greycomatrix(LBP_map, [1, 2], [0, -np.pi/4, -np.pi/2, -3*np.pi/4], levels=256)
-
+        GLCM = greycomatrix(
+            LBP_map, [1, 2], [0, -np.pi/4, -np.pi/2, -3*np.pi/4], levels=256
+        )
         # extract different combinations of GLCM
         GLCM_1_0 = GLCM[:, :, 0, 0]
         GLCM_1_45 = GLCM[:, :, 0, 1]
         GLCM_1_90 = GLCM[:, :, 0, 2]
         GLCM_1_135 = GLCM[:, :, 0, 3]
-
         GLCM_2_0 = GLCM[:, :, 1, 0]
         GLCM_2_45 = GLCM[:, :, 1, 1]
         GLCM_2_90 = GLCM[:, :, 1, 2]
         GLCM_2_135 = GLCM[:, :, 1, 3]
-
         # Feature Vectors
         # FV1: combining GLCMs of distance 1 and all angles
         FV1 = self._combine_GLCMs(GLCM_1_0, GLCM_1_45, GLCM_1_90, GLCM_1_135)
@@ -49,7 +53,6 @@ class GLCMCSLBCoPFeaturesExtractor:
         FV4 = self._combine_GLCMs(GLCM_1_0, GLCM_1_90, GLCM_2_0, GLCM_2_90)
         # FV: combining the FVs
         FV = np.concatenate([FV1, FV2, FV3, FV4])
-        
         return FV
 
     def fit(self, LBP_maps):
