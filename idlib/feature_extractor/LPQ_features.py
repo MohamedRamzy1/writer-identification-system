@@ -30,10 +30,19 @@ class LPQ:
     def __calculate_LPQ(self,img):
         # convert the image to double
         img=np.float64(img)
+
+        # check a valid window size
+        x,y = img.shape
+        if y < self.window_size :
+            self.window_size = y
+        if x < self.window_size:
+            self.window_size = x
+
         # get the radius of the window
         r=(self.window_size-1)/2
         x=np.arange(-r,r+1)[np.newaxis]    
 
+        # construct the kernel parameters to apply STFT to the neighbors 
         w0=np.ones_like(x)
         w1=np.exp(-2*np.pi*x*(1/self.window_size)*1j)
         w2=np.conj(w1)   
