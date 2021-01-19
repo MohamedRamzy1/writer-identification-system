@@ -1,0 +1,8 @@
+In this section , we discuss the overall system pipeline. The exact details of each module is discussed in subsequent sections. \\
+
+Our system can be divided into $3$ main modules, shown as follows :
+\begin{itemize}
+    \item \textbf{Preprocessor :} this module takes the \emph{complete form} image as an input, performs \emph{denoise} and \emph{extracts the written parts} only. Then, it \emph{segment out} each written lines in the document.
+    \item \textbf{Feature Extractor :} this module takes each line extracted by the \emph{preprocessor} and perform \emph{local binary pattern} texture descriptor on it and calculates the \emph{normalized LBP histogram}.
+    \item \textbf{Classifier :} this module contains the training and inference of \emph{SVM} classifier. The training is done on each line as \emph{separate train sample}, while inference is done on each line separately and then a \emph{majority vote} is taken.
+\end{itemize}
