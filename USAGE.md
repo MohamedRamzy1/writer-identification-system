@@ -14,7 +14,7 @@
     python run.py -dir /path/to/test/data/root/directory -mode test
     ```
 
-`/path/to/test/data/root/directory` should contain `data` folder containing test cases. After running the previous command, the code generates two text files `results.txt` and `time.txt` in the root directory next to `data` folder.  The root folder should be of the following structure :
+`/path/to/test/data/root/directory` should contain `data` folder containing test cases. After running the previous command, the code generates two text files `results.txt` and `time.txt` in the test data root directory next to `data` folder.  The test data root folder should be of the following structure :
 
 ```
 .

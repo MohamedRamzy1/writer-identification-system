@@ -29,6 +29,17 @@
 -   [x] LR.
 -   [x] NB.
 
+## Folder Structure
+
+-   `idlib/classifier` : contains code for different classifiers.
+-   `idlib/dataset` : contains code for train and test dataloaders.
+-   `idlib/feature_extractor` : contains code for different feature extractors.
+-   `idlib/preprocessor` : contains code for form preparation.
+-   `idlib/trainer` : contains code for training functions.
+-   `idlib/test.py` : contains main _test_ pipeline.
+-   `idlib/train.py` : contains main _train_ pipeline.
+-   `run.py` : contains main driver function for system.
+
 ## Installation
 
 -   Install dependencies from `requirements.txt`:
