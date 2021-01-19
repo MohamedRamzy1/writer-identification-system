@@ -97,7 +97,7 @@ class TrainLoader:
                             self.writers_forms_dict[writer]
                         ) > num_train_samples]
         # select random writers
-        train_writers = random.choices(writers_list, k=num_writers)
+        train_writers = random.sample(writers_list, k=num_writers)
         # select a random test writer from train writers
         test_writer = random.choice(train_writers)
         # define and fit label encoder
@@ -112,7 +112,7 @@ class TrainLoader:
             # check whether the writer is selected as a test
             if writer == test_writer:
                 # select random forms from writer
-                rand_choices = random.choices(
+                rand_choices = random.sample(
                     self.writers_forms_dict[writer], k=num_train_samples+1
                 )
                 # get a single test form
@@ -125,7 +125,7 @@ class TrainLoader:
             else:
                 # select random forms from writer
                 xtrain.extend(
-                    random.choices(
+                    random.sample(
                         self.writers_forms_dict[writer], k=num_train_samples
                     )
                 )

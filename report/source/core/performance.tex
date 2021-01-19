@@ -6,7 +6,7 @@
  \hline\hline
  Support Vector Machine & 100\% & 99.7\% \\ 
  \hline
- K-Nearest Neighbors & 99\% & 99.4\% \\
+ k-Nearest Neighbors & 99\% & 99.4\% \\
  \hline
  Random Forest & 99\% & 99.6\% \\
  \hline
@@ -18,3 +18,32 @@
 \caption{Comparison between accuracies of different classifiers using LBP feature and different sample size.}
 \label{table:1}
 \end{table}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{||c | c||}
+ \hline
+ Component & Execution Time \\ [0.5ex] 
+ \hline\hline
+ Form Clipping & 0.09 \\ 
+ \hline
+ Line Segmentation & 0.06 \\
+ \hline
+ LBP Features & 0.12 \\
+ \hline
+ Classifier Training & 0.01 \\
+ \hline
+ Complete test case & 2.00 \\ [1ex] 
+ \hline
+\end{tabular}
+\caption{Average execution time of different system components (measured in seconds).}
+\label{table:2}
+\end{table}
+
+\subsection{Accuracy Analysis}
+As mentioned before, different approaches are considered for both feature extraction and classification. \\
+We start by examining different feature extractors. According to \cite{c1}, the most promising texture descriptors are \emph{LBP}, \emph{LPQ} and \emph{GLCM}. We tried these texture descriptors, however we find that \emph{LBP} offers the most accurate and fast results, so we considered it for further experimentation. \emph{LBP} offers $99\%$ average accuracy with all classifiers in \textbf{sampled train mode}, however \emph{LPQ} and \emph{GLCM} offers around $95\%$ and $90\%$, respectively. \\
+Regarding the classifiers, table \ref{table:1} shows the accuracy of different classifiers using \emph{LBP} features on $100$ and $1000$ random test cases. We can see that \emph{SVM} and \emph{RF} offer comparable results, however we choose \emph{SVM}, as it is more robust to \emph{preprocessor} failures and offers more consistent accuracy.
+
+\subsection{Time Analysis}
+We try to maintain our system accuracy within reasonable execution time. Different components are implemented and optimized for time. The execution times for different components are shown in table \ref{table:2}.

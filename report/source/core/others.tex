@@ -1,0 +1,16 @@
+As mentioned before, we considered other different approaches in our experiments. In this section, we discuss, in some details, other considered approaches.
+
+\subsection{Preprocessing}
+We considered training the classifier on the whole form instead of separate lines, however this resulted in a huge performance impact, due to the small test cases. Moreover, we tried to segment out \textbf{connected components} from lines in the \emph{preprocessor}, in order to provide more training samples. Unfortunately, this does not work, as well, as the extracted features are not as good as that of complete lines. That's why, we decided to continue using separate lines in our system.
+
+\subsection{Feature Extraction}
+We, also, considered other feature extraction methods based on \emph{texture descriptors}, including :
+\begin{itemize}
+    \item \textbf{Local Phase Quantization (LPQ) :} offers around $95\%$ accuracy on randomly-sampled test cases, which is worse than \emph{LBP}. This is mainly because the form images do not contain heavy blurring and scanning issues.
+    \item \textbf{Gray Level Co-occurrence Matrix (GLCM) :} very primitive texture descriptor, offers humble performance.
+    \item \textbf{CSLBCoP :} integrates \emph{GLCM} with \textbf{Center Symmetric Local Binary Pattern} \emph{(CSLBP)} of an image to obtain the feature pattern. It offers even lower performance than \emph{LPQ} with around $90\%$ on randomly-sampled test cases.
+    \item \textbf{Principal Component Analysis (PCA) :} we tried extracting principal components from \emph{LBP} features, in order to reduce the feature vector size and avoid overfitting. Unfortunately, this does not improve performance over complete \emph{LBP} features.
+\end{itemize}
+
+\subsection{Classification}
+As mentioned before, other classifiers are considered as well. However, based on the previous analysis, we choose \emph{SVM} as our best classifier. We use \textbf{sklearn} for training all mentioned classifiers. Also, we use \textbf{sklearn grid search} for model parameters tuning.
