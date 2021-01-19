@@ -60,10 +60,8 @@ class FormPreparator:
 
     def segment_lines(self, gray_img, bin_img, min_line_height=10):
         # split a form image into lines
-        # dilate binary image
-        bin_img_dilated = dilation(bin_img)
         # count
-        ones = np.sum(bin_img_dilated, 1)
+        ones = np.sum(bin_img, 1)
         # histogram
         mean = np.mean(ones * 1.0) / 5
         histo = (ones > mean) * 1
@@ -101,7 +99,17 @@ class FormPreparator:
             if line_height > min_line_height:
                 gray_lines.append(gray_line)
                 bin_lines.append(bin_line)
-        return gray_lines, bin_lines
+        line_pixel_count = [np.sum(line) for line in bin_lines]
+        line_pixel_count_mean = np.mean(line_pixel_count)
+        gray_lines_filtered = [
+            gray_lines[i] for i in range(len(line_pixel_count))
+            if line_pixel_count[i] > line_pixel_count_mean/6
+        ]
+        bin_lines_filtered = [
+            bin_lines[i] for i in range(len(line_pixel_count))
+            if line_pixel_count[i] > line_pixel_count_mean/6
+        ]
+        return gray_lines_filtered, bin_lines_filtered
 
     def prepare_form(self, img):
         # prepare a form image
