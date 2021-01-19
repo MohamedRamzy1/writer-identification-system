@@ -1,5 +1,5 @@
 import numpy as np
-import cv2
+
 
 class LBPFeatureExtractor:
     """
@@ -23,7 +23,7 @@ class LBPFeatureExtractor:
     def _pad_image(self, img):
         # pad grayscale image with radius
         return np.pad(img, self.radius)
-    
+
     def _get_features(self, img):
         # extract LBP features map of a grayscale image
         # get image dimensions
@@ -32,47 +32,72 @@ class LBPFeatureExtractor:
         lbp_map = np.zeros((img_height, img_width))
         # pad input image with radius
         padded_img = self._pad_image(img)
-        # consider all 8 positions (compare whole image instead of only one pixel at a time)
+        # consider all 8 positions
+        # (compare whole image instead of only one pixel at a time)
         # TOP
         # mask padded image with original image at top position
-        cmp_map = (padded_img[:img_height, self.radius:img_width+self.radius] >= img)
+        cmp_map = (
+            padded_img[:img_height, self.radius:img_width+self.radius] >= img
+        )
         # multiply comparison map by 2^0 and add to LBP map
         lbp_map[self.radius:, :] += cmp_map[self.radius:, :] * 1
         # TOP-RIGHT
         # mask padded image with original image at top-right position
         cmp_map = (padded_img[:img_height, 2*self.radius:] >= img)
         # multiply comparison map by 2^1 and add to LBP map
-        lbp_map[self.radius:, :img_width-self.radius] += cmp_map[self.radius:, :img_width-self.radius] * 2
+        lbp_map[self.radius:, :img_width-self.radius] += cmp_map[
+            self.radius:, :img_width-self.radius
+        ] * 2
         # RIGHT
         # mask padded image with original image at right position
-        cmp_map = (padded_img[self.radius:img_height+self.radius, 2*self.radius:] >= img)
+        cmp_map = (
+            padded_img[
+                self.radius:img_height+self.radius, 2*self.radius:
+            ] >= img
+        )
         # multiply comparison map by 2^2 and add to LBP map
-        lbp_map[:, :img_width-self.radius] += cmp_map[:, :img_width-self.radius] * 4
+        lbp_map[:, :img_width-self.radius] += cmp_map[
+            :, :img_width-self.radius
+        ] * 4
         # BOTTOM-RIGHT
         # mask padded image with original image at bottom-right position
         cmp_map = (padded_img[2*self.radius:, 2*self.radius:] >= img)
         # multiply comparison map by 2^3 and add to LBP map
-        lbp_map[:img_height-self.radius, :img_width-self.radius] += cmp_map[:img_height-self.radius, :img_width-self.radius] * 8
+        lbp_map[:img_height-self.radius, :img_width-self.radius] += cmp_map[
+            :img_height-self.radius, :img_width-self.radius
+        ] * 8
         # BOTTOM
         # mask padded image with original image at bottom position
-        cmp_map = (padded_img[2*self.radius:, self.radius:img_width+self.radius] >= img)
+        cmp_map = (
+            padded_img[
+                2*self.radius:, self.radius:img_width+self.radius
+            ] >= img
+        )
         # multiply comparison map by 2^4 and add to LBP map
-        lbp_map[:img_height-self.radius, :] += cmp_map[:img_height-self.radius, :] * 16
+        lbp_map[:img_height-self.radius, :] += cmp_map[
+            :img_height-self.radius, :
+        ] * 16
         # BOTTOM-LEFT
         # mask padded image with original image at bottom-left position
         cmp_map = (padded_img[2*self.radius:, :img_width] >= img)
         # multiply comparison map by 2^5 and add to LBP map
-        lbp_map[:img_height-self.radius, self.radius:] += cmp_map[:img_height-self.radius, self.radius:] * 32
+        lbp_map[:img_height-self.radius, self.radius:] += cmp_map[
+            :img_height-self.radius, self.radius:
+        ] * 32
         # LEFT
         # mask padded image with original image at left position
-        cmp_map = (padded_img[self.radius:img_height+self.radius, :img_width] >= img)
+        cmp_map = (
+            padded_img[self.radius:img_height+self.radius, :img_width] >= img
+        )
         # multiply comparison map by 2^6 and add to LBP map
         lbp_map[:, self.radius:] += cmp_map[:, self.radius:] * 64
         # TOP-LEFT
         # mask padded image with original image at top-left position
         cmp_map = (padded_img[:img_height, :img_width] >= img)
         # multiply comparison map by 2^7 and add to LBP map
-        lbp_map[self.radius:, self.radius:] += cmp_map[self.radius:, self.radius:] * 128
+        lbp_map[self.radius:, self.radius:] += cmp_map[
+            self.radius:, self.radius:
+        ] * 128
         # return extracted LBP map
         return lbp_map
 
@@ -84,7 +109,9 @@ class LBPFeatureExtractor:
         unique, counts = np.unique(lbp_map, return_counts=True)
         lbp_counts = dict(zip(unique, counts))
         # extract final 256D feature vector
-        lbp_hist = [lbp_counts[float(i)] if float(i) in lbp_counts.keys() else 0 for i in range(256)]
+        lbp_hist = [lbp_counts[float(i)]
+                    if float(i) in lbp_counts.keys() else 0
+                    for i in range(256)]
         lbp_hist = np.array(lbp_hist)
         # normalize LBP histogram by its mean
         lbp_hist = np.divide(lbp_hist, np.mean(lbp_hist))

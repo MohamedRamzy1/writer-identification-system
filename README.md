@@ -11,21 +11,32 @@
 
 ## Pre-Processing Stage
 -   [x] Remove document noise.
--   [ ] Extract written part only.
+-   [x] Extract written part only.
 -   [x] Segment out lines.
--   [ ] Extract connected components _[OPTIONAL]_.
 
 ## Feature Extraction
 -   [x] LBP Texture Descriptors.
 -   [ ] GLCM (CSLBCoP) Texture Descriptors _[PENDING REVIEW]_.
 -   [ ] LPQ Texture Descriptors _[PENDING REVIEW]_.
--   [ ] PCA (or Truncated SVD) on extracted features _[PENDING REVIEW]_.
+-   [X] PCA (or Truncated SVD) on extracted features.
 
 ## Classifiers
 -   [x] SVM.
 -   [x] KNN.
--   [x] MLP.
 -   [x] RF.
--   [x] XGB.
 -   [x] LR.
 -   [x] NB.
+
+## Installation
+
+-   Install dependencies from `requirements.txt`:
+    ```bash
+    pip3 install -r requirements.txt
+    ```
+
+## Usage
+
+-   Run `run.py` :
+    ```bash
+    python run.py -dir /path/to/data/root/directory -mode [complete-train | sampled-train | test]
+    ```

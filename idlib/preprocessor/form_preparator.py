@@ -1,5 +1,7 @@
 import numpy as np
 import cv2
+from skimage.morphology import dilation
+
 
 class FormPreparator:
     """
@@ -23,7 +25,9 @@ class FormPreparator:
 
     def binarize_image(self, img):
         # apply OTSU threshold on a grayscale image
-        _, bin_img = cv2.threshold(img, 127.5, 1, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+        _, bin_img = cv2.threshold(
+            img, 127.5, 1, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU
+        )
         return bin_img
 
     def perform_denoise(self, img):
@@ -33,15 +37,33 @@ class FormPreparator:
         return smooth_img
 
     def clip_form(self, img):
-        # TODO : perform better form clipping
-        # get the written part from the form
-        img = img[int(0.25*img.shape[0]):int(0.7*img.shape[0]), int(0.1*img.shape[1]):int(0.9*img.shape[1])]
-        return img
+        # extract the hand written part of the image
+        # get the edges of the img using canny edge detection
+        edges = cv2.Canny(img, 50, 200)
+        # extract all lines in the image
+        lines = cv2.HoughLinesP(
+            edges, 1, np.pi/180, threshold=8, minLineLength=80, maxLineGap=1
+        )
+        # hold the horizontal lines
+        horizontal_rows = []
+        # loop over the found lines to get the horizontal ones
+        for line in lines:
+            # take the horizntal line starting from the second one
+            if (line[0][1] - line[0][3] < 20 and line[0][1] > 420):
+                horizontal_rows.append(line[0][1])
+        # sort the lines to take the first and last one
+        horizontal_rows.sort()
+        # crop the image based on the horizontal lines
+        # with margin 20 pixels up and down
+        # and margin 125 pixels left and right
+        return img[horizontal_rows[0]+20:horizontal_rows[-1]-20, 125:-125]
 
     def segment_lines(self, gray_img, bin_img, min_line_height=10):
         # split a form image into lines
+        # dilate binary image
+        bin_img_dilated = dilation(bin_img)
         # count
-        ones = np.sum(bin_img,1)
+        ones = np.sum(bin_img_dilated, 1)
         # histogram
         mean = np.mean(ones * 1.0) / 5
         histo = (ones > mean) * 1
@@ -53,10 +75,10 @@ class FormPreparator:
         falling_indices = np.array((edges == 1).nonzero()).flatten()
         if len(falling_indices) < 2 or len(rising_indices) < 2:
             return [gray_img], [bin_img]
-        # make starting with rising not falling 
+        # make starting with rising not falling
         if falling_indices[0] < rising_indices[0]:
             falling_indices = falling_indices[1:]
-        # make ending with falling not rising 
+        # make ending with falling not rising
         if rising_indices[-1] > falling_indices[-1]:
             rising_indices = rising_indices[:-1]
         # cut image on histo
@@ -66,8 +88,12 @@ class FormPreparator:
         for i in range(line_count):
             line_height = falling_indices[i] - rising_indices[i]
             # 1/4 of the line as padding
-            start_split = max(rising_indices[i] - line_height//4, 0)
-            end_split = min(falling_indices[i] + line_height//4, gray_img.shape[0])
+            start_split = max(
+                rising_indices[i] - line_height//4, 0
+            )
+            end_split = min(
+                falling_indices[i] + line_height//4, gray_img.shape[0]
+            )
             # split with padding
             gray_line = gray_img[start_split:end_split]
             bin_line = bin_img[start_split:end_split]
@@ -79,13 +105,13 @@ class FormPreparator:
 
     def prepare_form(self, img):
         # prepare a form image
-        # perform denoising (if applicable)
-        if self.denoise:
-            img = self.perform_denoise(img)
         # clip out written parts
         clipped_img = self.clip_form(img)
         # binarize image
         bin_img = self.binarize_image(clipped_img)
+        # perform denoising (if applicable)
+        if self.denoise:
+            smoothed_img = self.perform_denoise(clipped_img)
         # segment lines from form image
-        lines, bin_lines = self.segment_lines(clipped_img, bin_img)
+        lines, bin_lines = self.segment_lines(smoothed_img, bin_img)
         return lines, bin_lines
