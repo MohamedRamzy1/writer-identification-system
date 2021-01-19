@@ -1,0 +1,8 @@
+For this work, $5$ classifiers are considered for experimentation, which are \textbf{Support Vector Machines} \emph{(SVM)}, \textbf{k-Nearest Neighbors} \emph{(KNN)}, \textbf{Random Forests} \emph{(RF)}, \textbf{Logistic Regression} \emph{(LR)} and \textbf{Naive Bayes} \emph{(NB)}. However, for our system, we choose \emph{SVM}, as it's the best performing classifier based on accuracy. At the same time, due to the small size of test cases, it is slightly slower than other classifiers like \emph{KNNs}, which can be acceptable. \\
+
+The \emph{classification module} can have $3$ modes based on our implementation :
+\begin{enumerate}
+    \item \textbf{Complete train :} where the system is trained on complete data of authors with a specific number of forms. This is used as an initial experiment with the dataset and helped us determine the initial set of features.
+    \item \textbf{Sampled train :} this mode mimics the test environment. It reads the whole dataset and generate a specific number of random test cases of $3$ writers, $2$ samples per writer and only $one$ test sample. This enables us to tune our parameters and choose our final techniques, which are, then, implemented and refined.
+    \item \textbf{Test :} \emph{main pipeline} for the provided test environment, where the system takes the test directory and generates the output labels and time in text files.
+\end{enumerate}
