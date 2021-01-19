@@ -5,7 +5,7 @@
     \label{fig:lbp-implementation}
 \end{figure}
 
-The feature extraction module includes \textbf{local binary pattern}\emph{(LBP)} texture descriptor. Other feature extractor were considered, as well. However, after many experiments, we found out \emph{LBP} texture descriptor performs the best in our case. The other feature extractors are discussed in later sections. Although \emph{LBP} features offer high accuracy, \textbf{skimage} implementation is not vectorized and heavily depends on \emph{loops}. The extraction of \emph{LBP} features for a single form can take up to $0.5$ second. That's why, we come up with a vectorized implementation that speeds up processing to up to $0.02$ second per form. \\
+The feature extraction module includes \textbf{local binary pattern} \emph{(LBP)} texture descriptor. Other feature extractor were considered, as well. However, after many experiments, we found out \emph{LBP} texture descriptor performs the best in our case. The other feature extractors are discussed in later sections. Although \emph{LBP} features offer high accuracy, \textbf{skimage} implementation is not vectorized and heavily depends on \emph{loops}. The extraction of \emph{LBP} features for a single form can take up to $0.5$ second. That's why, we come up with a vectorized implementation that speeds up processing to up to $0.02$ second per form. \\
 
 Figure \ref{fig:lbp-implementation} shows the \textbf{vectorized implementation} on a simple $3X3$ image matrix. The implementation goes as follows :
 \begin{enumerate}

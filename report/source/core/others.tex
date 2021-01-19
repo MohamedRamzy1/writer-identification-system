@@ -6,9 +6,9 @@ We considered training the classifier on the whole form instead of separate line
 \subsection{Feature Extraction}
 We, also, considered other feature extraction methods based on \emph{texture descriptors}, including :
 \begin{itemize}
-    \item \textbf{Local Phase Quantization (LPQ) :} offers around $95\%$ accuracy on randomly-sampled test cases, which is worse than \emph{LBP}. This is mainly because the form images do not contain heavy blurring and scanning issues.
+    \item \textbf{Local Phase Quantization (LPQ) :} offers around $88\%$ accuracy on randomly-sampled test cases, which is worse than \emph{LBP}. This is mainly because the form images do not contain heavy blurring and scanning issues.
     \item \textbf{Gray Level Co-occurrence Matrix (GLCM) :} very primitive texture descriptor, offers humble performance.
-    \item \textbf{CSLBCoP :} integrates \emph{GLCM} with \textbf{Center Symmetric Local Binary Pattern} \emph{(CSLBP)} of an image to obtain the feature pattern. It offers even lower performance than \emph{LPQ} with around $90\%$ on randomly-sampled test cases.
+    \item \textbf{CSLBCoP :} integrates \emph{GLCM} with \textbf{Center Symmetric Local Binary Pattern} \emph{(CSLBP)} of an image to obtain the feature pattern. It offers even lower performance than \emph{LPQ} with around $81\%$ on randomly-sampled test cases.
     \item \textbf{Principal Component Analysis (PCA) :} we tried extracting principal components from \emph{LBP} features, in order to reduce the feature vector size and avoid overfitting. Unfortunately, this does not improve performance over complete \emph{LBP} features.
 \end{itemize}
 

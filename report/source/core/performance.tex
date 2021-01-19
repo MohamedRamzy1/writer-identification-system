@@ -33,7 +33,7 @@
  \hline
  Classifier Training & 0.01 \\
  \hline
- Complete test case & 2.00 \\ [1ex] 
+ Complete Test Case & 2.00 \\ [1ex] 
  \hline
 \end{tabular}
 \caption{Average execution time of different system components (measured in seconds).}
@@ -42,7 +42,7 @@
 
 \subsection{Accuracy Analysis}
 As mentioned before, different approaches are considered for both feature extraction and classification. \\
-We start by examining different feature extractors. According to \cite{c1}, the most promising texture descriptors are \emph{LBP}, \emph{LPQ} and \emph{GLCM}. We tried these texture descriptors, however we find that \emph{LBP} offers the most accurate and fast results, so we considered it for further experimentation. \emph{LBP} offers $99\%$ average accuracy with all classifiers in \textbf{sampled train mode}, however \emph{LPQ} and \emph{GLCM} offers around $95\%$ and $90\%$, respectively. \\
+We start by examining different feature extractors. According to \cite{c1}, the most promising texture descriptors are \emph{LBP}, \emph{LPQ} and \emph{GLCM}. We tried these texture descriptors, however we find that \emph{LBP} offers the most accurate and fast results, so we considered it for further experimentation. \emph{LBP} offers $99\%$ average accuracy with all classifiers in \textbf{sampled train mode}, however \emph{LPQ} and \emph{GLCM} offers around $88\%$ and $81\%$, respectively. \\
 Regarding the classifiers, table \ref{table:1} shows the accuracy of different classifiers using \emph{LBP} features on $100$ and $1000$ random test cases. We can see that \emph{SVM} and \emph{RF} offer comparable results, however we choose \emph{SVM}, as it is more robust to \emph{preprocessor} failures and offers more consistent accuracy.
 
 \subsection{Time Analysis}
