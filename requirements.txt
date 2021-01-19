@@ -4,5 +4,6 @@ scikit-image
 opencv-python
 xgboost
 numpy
+scipy
 tqdm
 argparse
