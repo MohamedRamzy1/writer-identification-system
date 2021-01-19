@@ -1,4 +1,3 @@
-# TODO : review and document the code
 import scipy.fft as fft
 import numpy as np
 

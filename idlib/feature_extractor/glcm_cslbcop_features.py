@@ -58,4 +58,3 @@ class GLCMCSLBCoPFeaturesExtractor:
             GLCM_CSLBCoP_features = self._Calculate_GLCM_CSLBCoP(LBP_map)
             total_GLCM_CSLBCoP_features.append(GLCM_CSLBCoP_features)
         return total_GLCM_CSLBCoP_features
-
