@@ -38,10 +38,10 @@ class FormPreparator:
     def clip_form(self, img):
         # extract the hand written part of the image
         # get the edges of the img using canny edge detection
-        edges = cv2.Canny(img, 50, 200)
+        edges = cv2.Canny(img, 50, 180)
         # extract all lines in the image
         lines = cv2.HoughLinesP(
-            edges, 1, np.pi/180, threshold=8, minLineLength=80, maxLineGap=1
+            edges, 1, np.pi/180, threshold=8, minLineLength=80, maxLineGap=3
         )
         # hold the horizontal lines
         horizontal_rows = []
@@ -50,6 +50,7 @@ class FormPreparator:
             # take the horizntal line starting from the second one
             if (line[0][1] - line[0][3] < 20 and line[0][1] > 420):
                 horizontal_rows.append(line[0][1])
+                horizontal_rows.append(line[0][3])
         # sort the lines to take the first and last one
         horizontal_rows.sort()
         # crop the image based on the horizontal lines
@@ -114,6 +115,10 @@ class FormPreparator:
         # prepare a form image
         # clip out written parts
         clipped_img = self.clip_form(img)
+        if clipped_img.size == 0:
+            clipped_img = img[
+                int(0.4*img.shape[0]):int(0.8*img.shape[0]), 125:-125
+            ]
         # binarize image
         bin_img = self.binarize_image(clipped_img)
         # perform denoising (if applicable)
